@@ -1,0 +1,12 @@
+.venv/
+build/
+dist/
+__pycache__/
+*.pyc
+assets/icon.icns
+*.wav
+*.mid
+# Rendered demos: made by tools/demo_render.py and tools/ab_phrase.py,
+# reproducible from the repo, and far too big to keep in it.
+demos/
+.DS_Store

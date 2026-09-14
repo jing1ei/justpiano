@@ -1,0 +1,22 @@
+numpy>=1.24
+sounddevice>=0.4.6
+python-rtmidi>=1.5.8
+mido>=1.3.0
+# Decodes the FLAC sample pack in assets/samples (see justpiano/sampled.py).
+# The wheels carry their own libsndfile, so this needs no Homebrew.
+soundfile>=0.12.1
+rumps>=0.4.0
+pyobjc-framework-Cocoa>=9.0
+# AppKit/Foundation come from Cocoa above; these two do not. Cocoa's only
+# dependency is pyobjc-core, so neither of the frameworks below arrives with it.
+# Both imports currently degrade instead of crashing, which is exactly why they
+# were easy to miss:
+#   ApplicationServices        -> hotkey.AXIsProcessTrusted, i.e. whether the
+#                                 global half of the mute hotkey may run. Without
+#                                 the wrapper it is bound out of the system
+#                                 framework by hand through pyobjc-core.
+#   UniformTypeIdentifiers     -> UTType for the save panel's file filter; the
+#                                 fallback is the deprecated
+#                                 setAllowedFileTypes_.
+pyobjc-framework-ApplicationServices>=9.0
+pyobjc-framework-UniformTypeIdentifiers>=9.0

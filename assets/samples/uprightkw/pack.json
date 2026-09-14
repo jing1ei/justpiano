@@ -1,0 +1,477 @@
+{
+ "name": "Upright Piano KW",
+ "instrument": "Kawai upright",
+ "credit": "Upright Piano KW by Gonzalo and Roberto (FreePats), CC0 1.0 public domain \u2014 a Kawai upright recorded with a Zoom H1 at the player's head position.",
+ "url": "https://freepats.zenvoid.org/Piano/acoustic-grand-piano.html#UprightKW",
+ "licence": "CC0-1.0",
+ "layer_velocities": [
+  40.5,
+  104.0
+ ],
+ "regions": [
+  {
+   "lo": 21,
+   "hi": 22,
+   "kc": 21,
+   "layer": 0,
+   "file": "u021_v0_A0vL.flac"
+  },
+  {
+   "lo": 23,
+   "hi": 25,
+   "kc": 24,
+   "layer": 0,
+   "file": "u024_v0_C1vL.flac"
+  },
+  {
+   "lo": 26,
+   "hi": 28,
+   "kc": 27,
+   "layer": 0,
+   "file": "u027_v0_D#1vL.flac"
+  },
+  {
+   "lo": 29,
+   "hi": 31,
+   "kc": 30,
+   "layer": 0,
+   "file": "u030_v0_F#1vL.flac"
+  },
+  {
+   "lo": 32,
+   "hi": 34,
+   "kc": 33,
+   "layer": 0,
+   "file": "u033_v0_A1vL.flac"
+  },
+  {
+   "lo": 35,
+   "hi": 37,
+   "kc": 36,
+   "layer": 0,
+   "file": "u036_v0_C2vL.flac"
+  },
+  {
+   "lo": 38,
+   "hi": 40,
+   "kc": 39,
+   "layer": 0,
+   "file": "u039_v0_D#2vL.flac"
+  },
+  {
+   "lo": 41,
+   "hi": 43,
+   "kc": 42,
+   "layer": 0,
+   "file": "u042_v0_F#2vL.flac"
+  },
+  {
+   "lo": 44,
+   "hi": 46,
+   "kc": 45,
+   "layer": 0,
+   "file": "u045_v0_A2vL.flac"
+  },
+  {
+   "lo": 47,
+   "hi": 49,
+   "kc": 48,
+   "layer": 0,
+   "file": "u048_v0_C3vL.flac"
+  },
+  {
+   "lo": 50,
+   "hi": 52,
+   "kc": 51,
+   "layer": 0,
+   "file": "u051_v0_D#3vL.flac"
+  },
+  {
+   "lo": 53,
+   "hi": 55,
+   "kc": 54,
+   "layer": 0,
+   "file": "u054_v0_F#3vL.flac"
+  },
+  {
+   "lo": 56,
+   "hi": 58,
+   "kc": 57,
+   "layer": 0,
+   "file": "u057_v0_A3vL.flac"
+  },
+  {
+   "lo": 59,
+   "hi": 61,
+   "kc": 60,
+   "layer": 0,
+   "file": "u060_v0_C4vL.flac"
+  },
+  {
+   "lo": 62,
+   "hi": 64,
+   "kc": 63,
+   "layer": 0,
+   "file": "u063_v0_D#4vL.flac"
+  },
+  {
+   "lo": 65,
+   "hi": 67,
+   "kc": 66,
+   "layer": 0,
+   "file": "u066_v0_F#4vL.flac"
+  },
+  {
+   "lo": 68,
+   "hi": 70,
+   "kc": 69,
+   "layer": 0,
+   "file": "u069_v0_A4vL.flac"
+  },
+  {
+   "lo": 71,
+   "hi": 73,
+   "kc": 72,
+   "layer": 0,
+   "file": "u072_v0_C5vL.flac"
+  },
+  {
+   "lo": 74,
+   "hi": 76,
+   "kc": 75,
+   "layer": 0,
+   "file": "u075_v0_D#5vL.flac"
+  },
+  {
+   "lo": 77,
+   "hi": 79,
+   "kc": 78,
+   "layer": 0,
+   "file": "u078_v0_F#5vL.flac"
+  },
+  {
+   "lo": 80,
+   "hi": 82,
+   "kc": 81,
+   "layer": 0,
+   "file": "u081_v0_A5vL.flac"
+  },
+  {
+   "lo": 83,
+   "hi": 85,
+   "kc": 84,
+   "layer": 0,
+   "file": "u084_v0_C6vL.flac"
+  },
+  {
+   "lo": 86,
+   "hi": 88,
+   "kc": 87,
+   "layer": 0,
+   "file": "u087_v0_D#6vL.flac"
+  },
+  {
+   "lo": 89,
+   "hi": 91,
+   "kc": 90,
+   "layer": 0,
+   "file": "u090_v0_F#6vL.flac"
+  },
+  {
+   "lo": 92,
+   "hi": 94,
+   "kc": 93,
+   "layer": 0,
+   "file": "u093_v0_A6vL.flac"
+  },
+  {
+   "lo": 95,
+   "hi": 97,
+   "kc": 96,
+   "layer": 0,
+   "file": "u096_v0_C7vL.flac"
+  },
+  {
+   "lo": 98,
+   "hi": 100,
+   "kc": 99,
+   "layer": 0,
+   "file": "u099_v0_D#7vL.flac"
+  },
+  {
+   "lo": 101,
+   "hi": 103,
+   "kc": 102,
+   "layer": 0,
+   "file": "u102_v0_F#7vL.flac"
+  },
+  {
+   "lo": 104,
+   "hi": 106,
+   "kc": 105,
+   "layer": 0,
+   "file": "u105_v0_A7vL.flac"
+  },
+  {
+   "lo": 107,
+   "hi": 108,
+   "kc": 108,
+   "layer": 0,
+   "file": "u108_v0_C8vL.flac"
+  },
+  {
+   "lo": 21,
+   "hi": 22,
+   "kc": 21,
+   "layer": 1,
+   "file": "u021_v1_A0vH.flac"
+  },
+  {
+   "lo": 23,
+   "hi": 23,
+   "kc": 23,
+   "layer": 1,
+   "file": "u023_v1_B0vH.flac"
+  },
+  {
+   "lo": 24,
+   "hi": 25,
+   "kc": 24,
+   "layer": 1,
+   "file": "u024_v1_C1vH.flac"
+  },
+  {
+   "lo": 26,
+   "hi": 28,
+   "kc": 27,
+   "layer": 1,
+   "file": "u027_v1_D#1vH.flac"
+  },
+  {
+   "lo": 29,
+   "hi": 31,
+   "kc": 30,
+   "layer": 1,
+   "file": "u030_v1_F#1vH.flac"
+  },
+  {
+   "lo": 32,
+   "hi": 33,
+   "kc": 33,
+   "layer": 1,
+   "file": "u033_v1_A1vH.flac"
+  },
+  {
+   "lo": 34,
+   "hi": 35,
+   "kc": 35,
+   "layer": 1,
+   "file": "u035_v1_B1vH.flac"
+  },
+  {
+   "lo": 36,
+   "hi": 37,
+   "kc": 36,
+   "layer": 1,
+   "file": "u036_v1_C2vH.flac"
+  },
+  {
+   "lo": 38,
+   "hi": 40,
+   "kc": 39,
+   "layer": 1,
+   "file": "u039_v1_D#2vH.flac"
+  },
+  {
+   "lo": 41,
+   "hi": 45,
+   "kc": 42,
+   "layer": 1,
+   "file": "u042_v1_F#2vH.flac"
+  },
+  {
+   "lo": 46,
+   "hi": 47,
+   "kc": 47,
+   "layer": 1,
+   "file": "u047_v1_B2vH.flac"
+  },
+  {
+   "lo": 48,
+   "hi": 49,
+   "kc": 48,
+   "layer": 1,
+   "file": "u048_v1_C3vH.flac"
+  },
+  {
+   "lo": 50,
+   "hi": 52,
+   "kc": 51,
+   "layer": 1,
+   "file": "u051_v1_D#3vH.flac"
+  },
+  {
+   "lo": 53,
+   "hi": 55,
+   "kc": 54,
+   "layer": 1,
+   "file": "u054_v1_F#3vH.flac"
+  },
+  {
+   "lo": 56,
+   "hi": 57,
+   "kc": 57,
+   "layer": 1,
+   "file": "u057_v1_A3vH.flac"
+  },
+  {
+   "lo": 58,
+   "hi": 61,
+   "kc": 59,
+   "layer": 1,
+   "file": "u059_v1_B3vH.flac"
+  },
+  {
+   "lo": 62,
+   "hi": 64,
+   "kc": 63,
+   "layer": 1,
+   "file": "u063_v1_D#4vH.flac"
+  },
+  {
+   "lo": 65,
+   "hi": 67,
+   "kc": 66,
+   "layer": 1,
+   "file": "u066_v1_F#4vH.flac"
+  },
+  {
+   "lo": 68,
+   "hi": 69,
+   "kc": 69,
+   "layer": 1,
+   "file": "u069_v1_A4vH.flac"
+  },
+  {
+   "lo": 70,
+   "hi": 71,
+   "kc": 71,
+   "layer": 1,
+   "file": "u071_v1_B4vH.flac"
+  },
+  {
+   "lo": 72,
+   "hi": 73,
+   "kc": 72,
+   "layer": 1,
+   "file": "u072_v1_C5vH.flac"
+  },
+  {
+   "lo": 74,
+   "hi": 76,
+   "kc": 75,
+   "layer": 1,
+   "file": "u075_v1_D#5vH.flac"
+  },
+  {
+   "lo": 77,
+   "hi": 79,
+   "kc": 78,
+   "layer": 1,
+   "file": "u078_v1_F#5vH.flac"
+  },
+  {
+   "lo": 80,
+   "hi": 81,
+   "kc": 81,
+   "layer": 1,
+   "file": "u081_v1_A5vH.flac"
+  },
+  {
+   "lo": 82,
+   "hi": 83,
+   "kc": 83,
+   "layer": 1,
+   "file": "u083_v1_B5vH.flac"
+  },
+  {
+   "lo": 84,
+   "hi": 85,
+   "kc": 84,
+   "layer": 1,
+   "file": "u084_v1_C6vH.flac"
+  },
+  {
+   "lo": 86,
+   "hi": 88,
+   "kc": 87,
+   "layer": 1,
+   "file": "u087_v1_D#6vH.flac"
+  },
+  {
+   "lo": 89,
+   "hi": 91,
+   "kc": 90,
+   "layer": 1,
+   "file": "u090_v1_F#6vH.flac"
+  },
+  {
+   "lo": 92,
+   "hi": 93,
+   "kc": 93,
+   "layer": 1,
+   "file": "u093_v1_A6vH.flac"
+  },
+  {
+   "lo": 94,
+   "hi": 95,
+   "kc": 95,
+   "layer": 1,
+   "file": "u095_v1_B6vH.flac"
+  },
+  {
+   "lo": 96,
+   "hi": 97,
+   "kc": 96,
+   "layer": 1,
+   "file": "u096_v1_C7vH.flac"
+  },
+  {
+   "lo": 98,
+   "hi": 100,
+   "kc": 99,
+   "layer": 1,
+   "file": "u099_v1_D#7vH.flac"
+  },
+  {
+   "lo": 101,
+   "hi": 103,
+   "kc": 102,
+   "layer": 1,
+   "file": "u102_v1_F#7vH.flac"
+  },
+  {
+   "lo": 104,
+   "hi": 105,
+   "kc": 105,
+   "layer": 1,
+   "file": "u105_v1_A7vH.flac"
+  },
+  {
+   "lo": 106,
+   "hi": 107,
+   "kc": 107,
+   "layer": 1,
+   "file": "u107_v1_B7vH.flac"
+  },
+  {
+   "lo": 108,
+   "hi": 108,
+   "kc": 108,
+   "layer": 1,
+   "file": "u108_v1_C8vH.flac"
+  }
+ ],
+ "layer_blend": 0.3,
+ "dynamic_db": 19.0
+}

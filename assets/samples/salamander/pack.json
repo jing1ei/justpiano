@@ -1,0 +1,857 @@
+{
+ "name": "Salamander Grand Piano V3",
+ "instrument": "Yamaha C5 grand",
+ "credit": "Salamander Grand Piano V3 by Alexander Holm, CC-BY 3.0 \u2014 a Yamaha C5 recorded at 44.1 kHz with two AKG C414s in an AB pair about 12 cm above the strings.",
+ "url": "https://archive.org/details/SalamanderGrandPianoV3",
+ "licence": "CC-BY-3.0",
+ "layer_velocities": [
+  3.96875,
+  43.65625,
+  83.34375,
+  123.03125
+ ],
+ "release_prefix": "rel",
+ "pedal_prefix": "pedal",
+ "regions": [
+  {
+   "lo": 21,
+   "hi": 22,
+   "kc": 21,
+   "layer": 0,
+   "file": "n021_v0.flac"
+  },
+  {
+   "lo": 21,
+   "hi": 22,
+   "kc": 21,
+   "layer": 1,
+   "file": "n021_v1.flac"
+  },
+  {
+   "lo": 21,
+   "hi": 22,
+   "kc": 21,
+   "layer": 2,
+   "file": "n021_v2.flac"
+  },
+  {
+   "lo": 21,
+   "hi": 22,
+   "kc": 21,
+   "layer": 3,
+   "file": "n021_v3.flac"
+  },
+  {
+   "lo": 23,
+   "hi": 25,
+   "kc": 24,
+   "layer": 0,
+   "file": "n024_v0.flac"
+  },
+  {
+   "lo": 23,
+   "hi": 25,
+   "kc": 24,
+   "layer": 1,
+   "file": "n024_v1.flac"
+  },
+  {
+   "lo": 23,
+   "hi": 25,
+   "kc": 24,
+   "layer": 2,
+   "file": "n024_v2.flac"
+  },
+  {
+   "lo": 23,
+   "hi": 25,
+   "kc": 24,
+   "layer": 3,
+   "file": "n024_v3.flac"
+  },
+  {
+   "lo": 26,
+   "hi": 28,
+   "kc": 27,
+   "layer": 0,
+   "file": "n027_v0.flac"
+  },
+  {
+   "lo": 26,
+   "hi": 28,
+   "kc": 27,
+   "layer": 1,
+   "file": "n027_v1.flac"
+  },
+  {
+   "lo": 26,
+   "hi": 28,
+   "kc": 27,
+   "layer": 2,
+   "file": "n027_v2.flac"
+  },
+  {
+   "lo": 26,
+   "hi": 28,
+   "kc": 27,
+   "layer": 3,
+   "file": "n027_v3.flac"
+  },
+  {
+   "lo": 29,
+   "hi": 31,
+   "kc": 30,
+   "layer": 0,
+   "file": "n030_v0.flac"
+  },
+  {
+   "lo": 29,
+   "hi": 31,
+   "kc": 30,
+   "layer": 1,
+   "file": "n030_v1.flac"
+  },
+  {
+   "lo": 29,
+   "hi": 31,
+   "kc": 30,
+   "layer": 2,
+   "file": "n030_v2.flac"
+  },
+  {
+   "lo": 29,
+   "hi": 31,
+   "kc": 30,
+   "layer": 3,
+   "file": "n030_v3.flac"
+  },
+  {
+   "lo": 32,
+   "hi": 34,
+   "kc": 33,
+   "layer": 0,
+   "file": "n033_v0.flac"
+  },
+  {
+   "lo": 32,
+   "hi": 34,
+   "kc": 33,
+   "layer": 1,
+   "file": "n033_v1.flac"
+  },
+  {
+   "lo": 32,
+   "hi": 34,
+   "kc": 33,
+   "layer": 2,
+   "file": "n033_v2.flac"
+  },
+  {
+   "lo": 32,
+   "hi": 34,
+   "kc": 33,
+   "layer": 3,
+   "file": "n033_v3.flac"
+  },
+  {
+   "lo": 35,
+   "hi": 37,
+   "kc": 36,
+   "layer": 0,
+   "file": "n036_v0.flac"
+  },
+  {
+   "lo": 35,
+   "hi": 37,
+   "kc": 36,
+   "layer": 1,
+   "file": "n036_v1.flac"
+  },
+  {
+   "lo": 35,
+   "hi": 37,
+   "kc": 36,
+   "layer": 2,
+   "file": "n036_v2.flac"
+  },
+  {
+   "lo": 35,
+   "hi": 37,
+   "kc": 36,
+   "layer": 3,
+   "file": "n036_v3.flac"
+  },
+  {
+   "lo": 38,
+   "hi": 40,
+   "kc": 39,
+   "layer": 0,
+   "file": "n039_v0.flac"
+  },
+  {
+   "lo": 38,
+   "hi": 40,
+   "kc": 39,
+   "layer": 1,
+   "file": "n039_v1.flac"
+  },
+  {
+   "lo": 38,
+   "hi": 40,
+   "kc": 39,
+   "layer": 2,
+   "file": "n039_v2.flac"
+  },
+  {
+   "lo": 38,
+   "hi": 40,
+   "kc": 39,
+   "layer": 3,
+   "file": "n039_v3.flac"
+  },
+  {
+   "lo": 41,
+   "hi": 43,
+   "kc": 42,
+   "layer": 0,
+   "file": "n042_v0.flac"
+  },
+  {
+   "lo": 41,
+   "hi": 43,
+   "kc": 42,
+   "layer": 1,
+   "file": "n042_v1.flac"
+  },
+  {
+   "lo": 41,
+   "hi": 43,
+   "kc": 42,
+   "layer": 2,
+   "file": "n042_v2.flac"
+  },
+  {
+   "lo": 41,
+   "hi": 43,
+   "kc": 42,
+   "layer": 3,
+   "file": "n042_v3.flac"
+  },
+  {
+   "lo": 44,
+   "hi": 46,
+   "kc": 45,
+   "layer": 0,
+   "file": "n045_v0.flac"
+  },
+  {
+   "lo": 44,
+   "hi": 46,
+   "kc": 45,
+   "layer": 1,
+   "file": "n045_v1.flac"
+  },
+  {
+   "lo": 44,
+   "hi": 46,
+   "kc": 45,
+   "layer": 2,
+   "file": "n045_v2.flac"
+  },
+  {
+   "lo": 44,
+   "hi": 46,
+   "kc": 45,
+   "layer": 3,
+   "file": "n045_v3.flac"
+  },
+  {
+   "lo": 47,
+   "hi": 49,
+   "kc": 48,
+   "layer": 0,
+   "file": "n048_v0.flac"
+  },
+  {
+   "lo": 47,
+   "hi": 49,
+   "kc": 48,
+   "layer": 1,
+   "file": "n048_v1.flac"
+  },
+  {
+   "lo": 47,
+   "hi": 49,
+   "kc": 48,
+   "layer": 2,
+   "file": "n048_v2.flac"
+  },
+  {
+   "lo": 47,
+   "hi": 49,
+   "kc": 48,
+   "layer": 3,
+   "file": "n048_v3.flac"
+  },
+  {
+   "lo": 50,
+   "hi": 52,
+   "kc": 51,
+   "layer": 0,
+   "file": "n051_v0.flac"
+  },
+  {
+   "lo": 50,
+   "hi": 52,
+   "kc": 51,
+   "layer": 1,
+   "file": "n051_v1.flac"
+  },
+  {
+   "lo": 50,
+   "hi": 52,
+   "kc": 51,
+   "layer": 2,
+   "file": "n051_v2.flac"
+  },
+  {
+   "lo": 50,
+   "hi": 52,
+   "kc": 51,
+   "layer": 3,
+   "file": "n051_v3.flac"
+  },
+  {
+   "lo": 53,
+   "hi": 55,
+   "kc": 54,
+   "layer": 0,
+   "file": "n054_v0.flac"
+  },
+  {
+   "lo": 53,
+   "hi": 55,
+   "kc": 54,
+   "layer": 1,
+   "file": "n054_v1.flac"
+  },
+  {
+   "lo": 53,
+   "hi": 55,
+   "kc": 54,
+   "layer": 2,
+   "file": "n054_v2.flac"
+  },
+  {
+   "lo": 53,
+   "hi": 55,
+   "kc": 54,
+   "layer": 3,
+   "file": "n054_v3.flac"
+  },
+  {
+   "lo": 56,
+   "hi": 58,
+   "kc": 57,
+   "layer": 0,
+   "file": "n057_v0.flac"
+  },
+  {
+   "lo": 56,
+   "hi": 58,
+   "kc": 57,
+   "layer": 1,
+   "file": "n057_v1.flac"
+  },
+  {
+   "lo": 56,
+   "hi": 58,
+   "kc": 57,
+   "layer": 2,
+   "file": "n057_v2.flac"
+  },
+  {
+   "lo": 56,
+   "hi": 58,
+   "kc": 57,
+   "layer": 3,
+   "file": "n057_v3.flac"
+  },
+  {
+   "lo": 59,
+   "hi": 61,
+   "kc": 60,
+   "layer": 0,
+   "file": "n060_v0.flac"
+  },
+  {
+   "lo": 59,
+   "hi": 61,
+   "kc": 60,
+   "layer": 1,
+   "file": "n060_v1.flac"
+  },
+  {
+   "lo": 59,
+   "hi": 61,
+   "kc": 60,
+   "layer": 2,
+   "file": "n060_v2.flac"
+  },
+  {
+   "lo": 59,
+   "hi": 61,
+   "kc": 60,
+   "layer": 3,
+   "file": "n060_v3.flac"
+  },
+  {
+   "lo": 62,
+   "hi": 64,
+   "kc": 63,
+   "layer": 0,
+   "file": "n063_v0.flac"
+  },
+  {
+   "lo": 62,
+   "hi": 64,
+   "kc": 63,
+   "layer": 1,
+   "file": "n063_v1.flac"
+  },
+  {
+   "lo": 62,
+   "hi": 64,
+   "kc": 63,
+   "layer": 2,
+   "file": "n063_v2.flac"
+  },
+  {
+   "lo": 62,
+   "hi": 64,
+   "kc": 63,
+   "layer": 3,
+   "file": "n063_v3.flac"
+  },
+  {
+   "lo": 65,
+   "hi": 67,
+   "kc": 66,
+   "layer": 0,
+   "file": "n066_v0.flac"
+  },
+  {
+   "lo": 65,
+   "hi": 67,
+   "kc": 66,
+   "layer": 1,
+   "file": "n066_v1.flac"
+  },
+  {
+   "lo": 65,
+   "hi": 67,
+   "kc": 66,
+   "layer": 2,
+   "file": "n066_v2.flac"
+  },
+  {
+   "lo": 65,
+   "hi": 67,
+   "kc": 66,
+   "layer": 3,
+   "file": "n066_v3.flac"
+  },
+  {
+   "lo": 68,
+   "hi": 70,
+   "kc": 69,
+   "layer": 0,
+   "file": "n069_v0.flac"
+  },
+  {
+   "lo": 68,
+   "hi": 70,
+   "kc": 69,
+   "layer": 1,
+   "file": "n069_v1.flac"
+  },
+  {
+   "lo": 68,
+   "hi": 70,
+   "kc": 69,
+   "layer": 2,
+   "file": "n069_v2.flac"
+  },
+  {
+   "lo": 68,
+   "hi": 70,
+   "kc": 69,
+   "layer": 3,
+   "file": "n069_v3.flac"
+  },
+  {
+   "lo": 71,
+   "hi": 73,
+   "kc": 72,
+   "layer": 0,
+   "file": "n072_v0.flac"
+  },
+  {
+   "lo": 71,
+   "hi": 73,
+   "kc": 72,
+   "layer": 1,
+   "file": "n072_v1.flac"
+  },
+  {
+   "lo": 71,
+   "hi": 73,
+   "kc": 72,
+   "layer": 2,
+   "file": "n072_v2.flac"
+  },
+  {
+   "lo": 71,
+   "hi": 73,
+   "kc": 72,
+   "layer": 3,
+   "file": "n072_v3.flac"
+  },
+  {
+   "lo": 74,
+   "hi": 76,
+   "kc": 75,
+   "layer": 0,
+   "file": "n075_v0.flac"
+  },
+  {
+   "lo": 74,
+   "hi": 76,
+   "kc": 75,
+   "layer": 1,
+   "file": "n075_v1.flac"
+  },
+  {
+   "lo": 74,
+   "hi": 76,
+   "kc": 75,
+   "layer": 2,
+   "file": "n075_v2.flac"
+  },
+  {
+   "lo": 74,
+   "hi": 76,
+   "kc": 75,
+   "layer": 3,
+   "file": "n075_v3.flac"
+  },
+  {
+   "lo": 77,
+   "hi": 79,
+   "kc": 78,
+   "layer": 0,
+   "file": "n078_v0.flac"
+  },
+  {
+   "lo": 77,
+   "hi": 79,
+   "kc": 78,
+   "layer": 1,
+   "file": "n078_v1.flac"
+  },
+  {
+   "lo": 77,
+   "hi": 79,
+   "kc": 78,
+   "layer": 2,
+   "file": "n078_v2.flac"
+  },
+  {
+   "lo": 77,
+   "hi": 79,
+   "kc": 78,
+   "layer": 3,
+   "file": "n078_v3.flac"
+  },
+  {
+   "lo": 80,
+   "hi": 82,
+   "kc": 81,
+   "layer": 0,
+   "file": "n081_v0.flac"
+  },
+  {
+   "lo": 80,
+   "hi": 82,
+   "kc": 81,
+   "layer": 1,
+   "file": "n081_v1.flac"
+  },
+  {
+   "lo": 80,
+   "hi": 82,
+   "kc": 81,
+   "layer": 2,
+   "file": "n081_v2.flac"
+  },
+  {
+   "lo": 80,
+   "hi": 82,
+   "kc": 81,
+   "layer": 3,
+   "file": "n081_v3.flac"
+  },
+  {
+   "lo": 83,
+   "hi": 85,
+   "kc": 84,
+   "layer": 0,
+   "file": "n084_v0.flac"
+  },
+  {
+   "lo": 83,
+   "hi": 85,
+   "kc": 84,
+   "layer": 1,
+   "file": "n084_v1.flac"
+  },
+  {
+   "lo": 83,
+   "hi": 85,
+   "kc": 84,
+   "layer": 2,
+   "file": "n084_v2.flac"
+  },
+  {
+   "lo": 83,
+   "hi": 85,
+   "kc": 84,
+   "layer": 3,
+   "file": "n084_v3.flac"
+  },
+  {
+   "lo": 86,
+   "hi": 88,
+   "kc": 87,
+   "layer": 0,
+   "file": "n087_v0.flac"
+  },
+  {
+   "lo": 86,
+   "hi": 88,
+   "kc": 87,
+   "layer": 1,
+   "file": "n087_v1.flac"
+  },
+  {
+   "lo": 86,
+   "hi": 88,
+   "kc": 87,
+   "layer": 2,
+   "file": "n087_v2.flac"
+  },
+  {
+   "lo": 86,
+   "hi": 88,
+   "kc": 87,
+   "layer": 3,
+   "file": "n087_v3.flac"
+  },
+  {
+   "lo": 89,
+   "hi": 91,
+   "kc": 90,
+   "layer": 0,
+   "file": "n090_v0.flac"
+  },
+  {
+   "lo": 89,
+   "hi": 91,
+   "kc": 90,
+   "layer": 1,
+   "file": "n090_v1.flac"
+  },
+  {
+   "lo": 89,
+   "hi": 91,
+   "kc": 90,
+   "layer": 2,
+   "file": "n090_v2.flac"
+  },
+  {
+   "lo": 89,
+   "hi": 91,
+   "kc": 90,
+   "layer": 3,
+   "file": "n090_v3.flac"
+  },
+  {
+   "lo": 92,
+   "hi": 94,
+   "kc": 93,
+   "layer": 0,
+   "file": "n093_v0.flac"
+  },
+  {
+   "lo": 92,
+   "hi": 94,
+   "kc": 93,
+   "layer": 1,
+   "file": "n093_v1.flac"
+  },
+  {
+   "lo": 92,
+   "hi": 94,
+   "kc": 93,
+   "layer": 2,
+   "file": "n093_v2.flac"
+  },
+  {
+   "lo": 92,
+   "hi": 94,
+   "kc": 93,
+   "layer": 3,
+   "file": "n093_v3.flac"
+  },
+  {
+   "lo": 95,
+   "hi": 97,
+   "kc": 96,
+   "layer": 0,
+   "file": "n096_v0.flac"
+  },
+  {
+   "lo": 95,
+   "hi": 97,
+   "kc": 96,
+   "layer": 1,
+   "file": "n096_v1.flac"
+  },
+  {
+   "lo": 95,
+   "hi": 97,
+   "kc": 96,
+   "layer": 2,
+   "file": "n096_v2.flac"
+  },
+  {
+   "lo": 95,
+   "hi": 97,
+   "kc": 96,
+   "layer": 3,
+   "file": "n096_v3.flac"
+  },
+  {
+   "lo": 98,
+   "hi": 100,
+   "kc": 99,
+   "layer": 0,
+   "file": "n099_v0.flac"
+  },
+  {
+   "lo": 98,
+   "hi": 100,
+   "kc": 99,
+   "layer": 1,
+   "file": "n099_v1.flac"
+  },
+  {
+   "lo": 98,
+   "hi": 100,
+   "kc": 99,
+   "layer": 2,
+   "file": "n099_v2.flac"
+  },
+  {
+   "lo": 98,
+   "hi": 100,
+   "kc": 99,
+   "layer": 3,
+   "file": "n099_v3.flac"
+  },
+  {
+   "lo": 101,
+   "hi": 103,
+   "kc": 102,
+   "layer": 0,
+   "file": "n102_v0.flac"
+  },
+  {
+   "lo": 101,
+   "hi": 103,
+   "kc": 102,
+   "layer": 1,
+   "file": "n102_v1.flac"
+  },
+  {
+   "lo": 101,
+   "hi": 103,
+   "kc": 102,
+   "layer": 2,
+   "file": "n102_v2.flac"
+  },
+  {
+   "lo": 101,
+   "hi": 103,
+   "kc": 102,
+   "layer": 3,
+   "file": "n102_v3.flac"
+  },
+  {
+   "lo": 104,
+   "hi": 106,
+   "kc": 105,
+   "layer": 0,
+   "file": "n105_v0.flac"
+  },
+  {
+   "lo": 104,
+   "hi": 106,
+   "kc": 105,
+   "layer": 1,
+   "file": "n105_v1.flac"
+  },
+  {
+   "lo": 104,
+   "hi": 106,
+   "kc": 105,
+   "layer": 2,
+   "file": "n105_v2.flac"
+  },
+  {
+   "lo": 104,
+   "hi": 106,
+   "kc": 105,
+   "layer": 3,
+   "file": "n105_v3.flac"
+  },
+  {
+   "lo": 107,
+   "hi": 108,
+   "kc": 108,
+   "layer": 0,
+   "file": "n108_v0.flac"
+  },
+  {
+   "lo": 107,
+   "hi": 108,
+   "kc": 108,
+   "layer": 1,
+   "file": "n108_v1.flac"
+  },
+  {
+   "lo": 107,
+   "hi": 108,
+   "kc": 108,
+   "layer": 2,
+   "file": "n108_v2.flac"
+  },
+  {
+   "lo": 107,
+   "hi": 108,
+   "kc": 108,
+   "layer": 3,
+   "file": "n108_v3.flac"
+  }
+ ]
+}

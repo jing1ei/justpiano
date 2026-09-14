@@ -1,0 +1,124 @@
+# Builds Just Piano.app on a real Mac and attaches the disk image to a release.
+#
+# Triggered by pushing a tag that looks like a version (`v1.0.0`), which is what
+# "Ship a Release.command" does. It can also be run by hand from the Actions tab
+# when you want a build without cutting a release.
+#
+# There is no code-signing certificate here, so `build_app.sh` signs the bundle
+# ad-hoc. That is enough for the app to run, but Gatekeeper will still stop it
+# the first time on someone else's Mac -- the release notes below say how to get
+# past that, because "it's damaged and can't be opened" is what an unsigned app
+# looks like to a user and it is not what has happened.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # macOS 14 on Apple silicon: the .app is arm64-only, which is what the
+    # PyInstaller bundle would be on any modern Mac anyway.
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check the version matches the tag
+        # A tag that disagrees with justpiano/__init__.py produces a release
+        # whose filename and About box say different things. Fail here, where it
+        # costs a minute, rather than after the release is published.
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME#v}"
+          SRC="$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' justpiano/__init__.py)"
+          echo "tag=$TAG  source=$SRC"
+          [ "$TAG" = "$SRC" ] || {
+            echo "::error::tag $GITHUB_REF_NAME does not match __version__ $SRC"
+            exit 1
+          }
+
+      - name: Check the sample packs are present
+        # The build would otherwise succeed and quietly ship an app that falls
+        # back to the synthesised instruments. JustPiano.spec fails on this too;
+        # this says so in one line instead of inside a PyInstaller traceback.
+        run: |
+          set -euo pipefail
+          for pack in salamander uprightkw; do
+            test -f "assets/samples/$pack/pack.json" \
+              || { echo "::error::assets/samples/$pack is missing"; exit 1; }
+          done
+          find assets/samples -name '*.flac' | wc -l
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip wheel
+          python -m pip install -r requirements.txt pyinstaller
+
+      - name: Run the self-test
+        # The suite builds sample banks and renders audio; it needs no display
+        # and no audio device, so it runs here exactly as it does locally.
+        run: PYTHONPATH="$PWD" python tools/selftest.py
+
+      - name: Build the app and the disk image
+        run: ./build_app.sh --dmg
+
+      - name: Name the artefacts
+        id: names
+        run: |
+          set -euo pipefail
+          VERSION="$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' justpiano/__init__.py)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "dmg=dist/JustPiano-$VERSION.dmg" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JustPiano-${{ steps.names.outputs.version }}
+          path: ${{ steps.names.outputs.dmg }}
+          if-no-files-found: error
+
+      - name: Publish the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.names.outputs.dmg }}
+          generate_release_notes: true
+          body: |
+            ## Just Piano ${{ steps.names.outputs.version }}
+
+            Download the `.dmg`, open it, and drag **Just Piano** to Applications.
+
+            ### First launch
+
+            This build is not signed with an Apple Developer certificate, so
+            macOS will refuse it the first time and say the app is *damaged*.
+            It is not — that is the wording Gatekeeper uses for anything it
+            cannot check. Either:
+
+            * right-click the app in Applications and choose **Open**, then
+              **Open** again in the dialog; or
+            * run `xattr -dr com.apple.quarantine "/Applications/Just Piano.app"`.
+
+            You only have to do this once.
+
+            ### Sounds
+
+            The grand and felt instruments are the Salamander Grand Piano
+            (Yamaha C5) by Alexander Holm, CC-BY 3.0. The upright is Upright
+            Piano KW by Gonzalo and Roberto of FreePats, CC0. The Rhodes and
+            Wurlitzer are synthesised and carry no audio at all. See the README
+            for the full credits.
