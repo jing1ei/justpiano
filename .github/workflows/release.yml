@@ -1,0 +1,133 @@
+name: Build and verify
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      prerelease: ${{ steps.version.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate version before building
+        id: version
+        run: |
+          python -m tools.release_metadata version
+          python .github/scripts/test_release.py
+  build:
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15-intel
+            target: macOS-x64
+            platform: macOS-x64
+            architecture: x64
+          - os: macos-15
+            target: macOS-arm64
+            platform: macOS-arm64
+            architecture: arm64
+          - os: windows-2022
+            target: Windows-x64
+            platform: Windows-x64
+            architecture: x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        id: python
+        with:
+          python-version: '3.11'
+          architecture: ${{ matrix.architecture }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            constraints-build.txt
+      - name: Install reproducible dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -c constraints-build.txt pyinstaller setuptools
+      - name: Core and platform regressions
+        run: python -m unittest discover -s tests -v
+      - name: Audio integration (macOS)
+        if: runner.os == 'macOS'
+        run: python -m tools.selftest
+      - name: Native menu contracts (macOS)
+        if: runner.os == 'macOS'
+        run: python -m tools.tray_smoke
+      - name: Windows UI integration
+        if: runner.os == 'Windows'
+        run: python -m tools.windows_smoke
+      - name: Package Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          PYTHON: ${{ steps.python.outputs.python-path }}
+        run: ./build_windows.ps1
+      - name: Package macOS and check all deployment targets
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          PYTHON: ${{ steps.python.outputs.python-path }}
+        run: |
+          export JUSTPIANO_VENV="$pythonLocation"
+          ./build_app.sh --dmg
+      - name: Verify package and record build identity
+        run: python -m tools.release_metadata stamp dist ${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JustPiano-1.0.0-${{ matrix.platform }}
+          path: |
+            dist/*.dmg
+            dist/*.zip
+            dist/build-*.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Download instructions
+        shell: bash
+        run: |
+          echo "### ${{ matrix.target }} package ready" >> "$GITHUB_STEP_SUMMARY"
+          echo "Download **JustPiano-1.0.0-${{ matrix.platform }}** from the Artifacts section of this run." >> "$GITHUB_STEP_SUMMARY"
+          echo "Build artifacts are retained for 14 days. Pushes to main refresh release 1.0.0 after all platforms pass." >> "$GITHUB_STEP_SUMMARY"
+  publish:
+    name: Publish 1.0.0
+    needs: [validate, build]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: JustPiano-1.0.0-*
+          merge-multiple: true
+          path: release
+      - name: Verify build identity and prepare downloads
+        run: |
+          python -m tools.release_metadata verify release
+          python -m tools.package_release release
+      - name: Publish verified packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/scripts/release.py release/downloads

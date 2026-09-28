@@ -1,0 +1,10 @@
+numpy>=1.24,<3
+sounddevice>=0.4.6,<1
+python-rtmidi>=1.5.8,<2
+mido>=1.3.0,<2
+soundfile>=0.12.1,<1
+# Native UI packages are never installed on Windows.
+rumps==0.4.0; sys_platform == 'darwin'
+pyobjc-framework-Cocoa>=9,<11; sys_platform == 'darwin'
+pyobjc-framework-ApplicationServices>=9,<11; sys_platform == 'darwin'
+pyobjc-framework-UniformTypeIdentifiers>=9,<11; sys_platform == 'darwin'
