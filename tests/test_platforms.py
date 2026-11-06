@@ -174,7 +174,7 @@ class WindowsControllerTests(unittest.TestCase):
         a.timer = 'timer'
         a.midi = unittest.mock.Mock()
         a.engine.volume = .75
-        with patch.object(windows.messagebox, 'showinfo') as info, \
+        with patch.object(windows.messagebox, 'showinfo'), \
              patch.object(windows.messagebox, 'askyesno', return_value=False) as confirm:
             a.quit()
             self.assertTrue(a.quit_waited)

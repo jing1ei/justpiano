@@ -14,9 +14,9 @@ def check(result_path):
     from .sampled import make_bank
     from .synth import AudioEngine
     from .recorder import export_midi, export_wav
-    import rtmidi
-    import sounddevice
-    import soundfile
+    import importlib
+    for module_name in ("rtmidi", "sounddevice", "soundfile"):
+        importlib.import_module(module_name)
     result_path = Path(result_path)
     bank = make_bank('grand')
     bank.build_blocking()

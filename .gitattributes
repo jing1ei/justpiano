@@ -1,0 +1,17 @@
+# Normalize text handling for fresh clones and source archives.
+* text=auto eol=lf
+
+# Shell and Apple double-click launchers retain POSIX execute permission.
+build_app.sh text eol=lf
+run.sh text eol=lf
+"Build Just Piano.command" text eol=lf
+
+# Third-party binaries and samples are already compressed.
+*.png binary
+*.ico binary
+*.icns binary
+*.flac binary
+*.wav binary
+*.mid binary
+*.zip binary
+*.dmg binary

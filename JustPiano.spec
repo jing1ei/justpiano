@@ -17,12 +17,15 @@ if not _match:
 VERSION = _match.group(1)
 
 datas, binaries, hiddenimports = [], [], []
-packages = ["sounddevice", "rtmidi", "mido", "soundfile"]
+# sounddevice and soundfile are single-file modules rather than packages. The
+# PyInstaller contrib hooks own their PortAudio/libsndfile binaries; collect_all()
+# and collect_dynamic_libs() merely emit misleading "not a package" warnings.
+packages = ["rtmidi", "mido"]
 if sys.platform == "darwin":
     packages.append("rumps")
 for package in packages:
-    # Every one of these is a hard requirement; a failed collection means the
-    # bundle would silently ship without PortAudio, _rtmidi or the rumps datas.
+    # Every packaged dependency is required: a failed collection means the bundle
+    # could silently ship without _rtmidi or rumps resources.
     try:
         pkg_datas, pkg_binaries, pkg_hidden = collect_all(package)
     except Exception as exc:

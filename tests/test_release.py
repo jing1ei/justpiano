@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
+from justpiano import __version__
 from tools import package_release
 
 
@@ -25,16 +26,17 @@ class ReleaseTests(unittest.TestCase):
             def archive(path):
                 with zipfile.ZipFile(path, 'w') as z:
                     z.writestr('JustPiano/main.py', '# source')
+                return path
             with patch.object(package_release, 'source_archive', side_effect=archive):
                 output = package_release.package(root)
             self.assertEqual({p.name for p in output.iterdir()}, {
-                'JustPiano-1.0.0-macOS-arm64.dmg', 'JustPiano-1.0.0-macOS-x64.dmg',
-                'JustPiano-1.0.0-Windows-x64.zip', 'JustPiano-1.0.0-source.zip', 'SHA256SUMS.txt'})
+                f'JustPiano-{__version__}-macOS-arm64.dmg', f'JustPiano-{__version__}-macOS-x64.dmg',
+                f'JustPiano-{__version__}-Windows-x64.zip', f'JustPiano-{__version__}-source.zip', 'SHA256SUMS.txt'})
             for line in (output/'SHA256SUMS.txt').read_text().splitlines():
                 digest, name = line.split('  ')
                 self.assertEqual(digest, hashlib.sha256((output/name).read_bytes()).hexdigest())
             readme = (Path(__file__).resolve().parents[1]/'README.md').read_text()
-            for name in package_release.ASSETS.values():
+            for name in package_release.ASSETS:
                 self.assertIn(name, readme)
             with self.assertRaises(FileExistsError):
                 package_release.package(root)

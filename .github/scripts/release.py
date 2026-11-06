@@ -1,63 +1,67 @@
-"""Prepare and publish the complete rolling 1.0.0 release after a main build."""
+"""Publish verified packages as an immutable GitHub release.
+
+Usage: python .github/scripts/release.py DIR [--dry-run]
+
+DIR must contain exactly the files produced by `tools/package_release.py`
+plus their SHA256SUMS.txt. Each version is published once; a release that is
+already public is never replaced or re-tagged. Ship again by bumping
+`justpiano/__init__.py`.
+"""
 import argparse
-import fnmatch
-import hashlib
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
+import sys
 import tempfile
 
-VERSION = '1.0.0'
-TAG = 'v' + VERSION
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+
+from justpiano import __version__ as VERSION  # noqa: E402
+from tools.package_release import RELEASE_FILES  # noqa: E402
+from tools.release_metadata import digest, version_info  # noqa: E402
+
+TAG = 'v' + VERSION
+CHECKSUMS = 'SHA256SUMS.txt'
+NOTES = (
+    'Just Piano {version}.\n\n'
+    '| Computer | Download |\n'
+    '|---|---|\n'
+    '| Mac with Apple silicon (M1 or later) | `JustPiano-{version}-macOS-arm64.dmg` |\n'
+    '| Mac with an Intel processor | `JustPiano-{version}-macOS-x64.dmg` |\n'
+    '| Windows 10 or later, 64-bit | `JustPiano-{version}-Windows-x64.zip` |\n\n'
+    'macOS builds are ad-hoc signed and not notarized. `{checksums}` covers every asset; '
+    'the source archive contains the tracked repository. See the README for installation, '
+    'requirements and audio sample credits.'
+)
 
 
-def digest(path):
-    h = hashlib.sha256()
-    with path.open('rb') as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b''):
-            h.update(block)
-    return h.hexdigest()
-
-
-def prepare(source, output, config):
-    """Require every platform before creating any release or changing its tag."""
-    candidates = [p for p in source.rglob('*') if p.is_file()]
-    # Preserve the checksums emitted by platform/source packaging before any
-    # filename is normalized. Missing or corrupted inputs stop publication.
-    for manifest in candidates:
-        if manifest.name in ('SHA256SUMS', 'SHA256SUMS.txt') or manifest.name.endswith('.sha256'):
-            for line in manifest.read_text().splitlines():
-                checksum, name = line.split('  ', 1)
-                name = name.removeprefix('./')
-                if Path(name).name != name or digest(manifest.parent / name) != checksum:
-                    raise ValueError(f'Input checksum mismatch: {name}')
-    selected = {}
-    for name, pattern in config['assets'].items():
-        matches = [p for p in candidates if p.name == name or fnmatch.fnmatchcase(p.name, pattern)]
-        if len(matches) != 1 or matches[0].is_symlink() or matches[0].stat().st_size == 0:
-            raise ValueError(f'Expected one nonempty package for {name}; found {matches}')
-        selected[name] = matches[0]
-    for pattern in config.get('extras', []):
-        for path in candidates:
-            if fnmatch.fnmatchcase(path.name, pattern):
-                if path.name in selected and digest(selected[path.name]) != digest(path):
-                    raise ValueError(f'Conflicting additional asset: {path.name}')
-                if path.is_symlink() or not path.stat().st_size:
-                    raise ValueError(f'Invalid additional asset: {path.name}')
-                selected[path.name] = path
-    output.mkdir(parents=True, exist_ok=False)
-    for name, path in selected.items():
-        shutil.copyfile(path, output / name)
-    source_name = f"{config['project']}-{VERSION}-source.zip"
-    if source_name not in selected:
-        subprocess.run(['git', 'archive', '--format=zip', f"--prefix={config['project']}-{VERSION}/",
-                        '-o', str((output / source_name).resolve()), 'HEAD'], cwd=ROOT, check=True)
-    files = sorted(output.iterdir())
-    (output / 'SHA256SUMS.txt').write_text(''.join(f'{digest(p)}  {p.name}\n' for p in files))
-    return output
+def validate(directory: Path, expected_files=RELEASE_FILES) -> dict:
+    """Return `{filename: sha256}` for a complete, untampered release directory."""
+    sums = directory / CHECKSUMS
+    if not sums.is_file():
+        raise ValueError(f'Missing {CHECKSUMS} in {directory}')
+    manifest = {}
+    for line in sums.read_text(encoding='utf-8').splitlines():
+        checksum, separator, name = line.partition('  ')
+        if not separator or Path(name).name != name or name in manifest:
+            raise ValueError(f'Malformed checksum line: {line!r}')
+        manifest[name] = checksum
+    if set(manifest) != set(expected_files):
+        raise ValueError(f'{CHECKSUMS} must list exactly {sorted(expected_files)}; '
+                         f'found {sorted(manifest)}')
+    present = {path.name for path in directory.iterdir()}
+    if present != set(expected_files) | {CHECKSUMS}:
+        raise ValueError(f'Unexpected or missing files in {directory}: {sorted(present)}')
+    for name, checksum in manifest.items():
+        path = directory / name
+        if path.is_symlink() or not path.is_file() or path.stat().st_size == 0:
+            raise ValueError(f'Invalid release asset: {name}')
+        if digest(path) != checksum:
+            raise ValueError(f'Checksum mismatch: {name}')
+    manifest[CHECKSUMS] = digest(sums)
+    return manifest
 
 
 def gh(*args, payload=None):
@@ -78,72 +82,82 @@ def pages(endpoint):
     return [item for page in json.loads(gh('api', endpoint, '--paginate', '--slurp')) for item in page]
 
 
-def publish(directory, config, sha, repo, notes=''):
+def tag_commit(prefix, tag):
+    """Commit a tag resolves to (following annotated tags), or None if absent."""
+    for ref in api(f'{prefix}/git/matching-refs/tags/{tag}') or []:
+        if ref['ref'] == f'refs/tags/{tag}':
+            target = ref['object']
+            while target['type'] == 'tag':
+                target = api(f"{prefix}/git/tags/{target['sha']}")['object']
+            return target['sha']
+    return None
+
+
+def publish(directory, sha, repo, prerelease, notes=''):
+    expected = validate(directory)
     prefix = f'repos/{repo}'
-    expected = {}
-    for line in (directory / 'SHA256SUMS.txt').read_text().splitlines():
-        checksum, name = line.split('  ', 1)
-        if Path(name).name != name or digest(directory / name) != checksum:
-            raise ValueError(f'Invalid local checksum: {name}')
-        expected[name] = checksum
-    expected['SHA256SUMS.txt'] = digest(directory / 'SHA256SUMS.txt')
-    if set(expected) != {p.name for p in directory.iterdir()}:
-        raise ValueError('Unexpected files outside the checksum manifest')
 
-    def current():
-        if api(prefix + '/git/ref/heads/main')['object']['sha'] != sha:
-            raise ValueError('A newer main commit exists; this build will not replace its release')
+    def require_tag_at_build():
+        tagged = tag_commit(prefix, TAG)
+        if tagged not in (None, sha):
+            raise ValueError(f'{TAG} points at {tagged}, not at the built commit {sha}')
 
-    current()
-    releases = [r for r in pages(prefix + '/releases?per_page=100') if r['tag_name'] == TAG]
+    require_tag_at_build()
+    releases = [r for r in pages(f'{prefix}/releases?per_page=100') if r['tag_name'] == TAG]
+    if any(not r['draft'] for r in releases):
+        raise ValueError(f'{TAG} is already published; bump justpiano/__init__.py to release again')
     if len(releases) > 1:
-        raise ValueError('Multiple releases use v1.0.0')
-    body = notes or config['notes']
-    body += f'\n\nBuilt from `{sha}`. Updated automatically after a successful main build.\n'
-    metadata = dict(name=VERSION, body=body, draft=True, prerelease=False)
-    if releases:
-        release = api(prefix + f"/releases/{releases[0]['id']}", 'PATCH', metadata)
+        raise ValueError(f'Multiple draft releases use {TAG}; delete the extras and retry')
+    body = notes or NOTES.format(version=VERSION, checksums=CHECKSUMS)
+    body += f'\n\nBuilt from `{sha}`.\n'
+    metadata = {'name': f'Just Piano {VERSION}', 'body': body, 'draft': True,
+                'prerelease': prerelease, 'target_commitish': sha}
+    if releases:   # a draft left by a failed earlier attempt
+        release = api(f"{prefix}/releases/{releases[0]['id']}", 'PATCH', metadata)
     else:
-        release = api(prefix + '/releases', 'POST', dict(metadata, tag_name=TAG, target_commitish=sha))
+        release = api(f'{prefix}/releases', 'POST', dict(metadata, tag_name=TAG))
     gh('release', 'upload', TAG, '--repo', repo, '--clobber',
        *(str(directory / name) for name in sorted(expected)))
-    # Check what GitHub stored, including resumed uploads, before publishing.
+    # Check what GitHub stored, including resumed uploads, before going public.
     with tempfile.TemporaryDirectory() as temporary:
         args = ['release', 'download', TAG, '--repo', repo, '--dir', temporary]
-        for name in expected:
+        for name in sorted(expected):
             args += ['--pattern', name]
         gh(*args)
         for name, checksum in expected.items():
             if digest(Path(temporary) / name) != checksum:
                 raise ValueError(f'Uploaded checksum mismatch: {name}')
-    current()
-    for asset in pages(prefix + f"/releases/{release['id']}/assets?per_page=100"):
+    for asset in pages(f"{prefix}/releases/{release['id']}/assets?per_page=100"):
         if asset['name'] not in expected:
-            api(prefix + f"/releases/assets/{asset['id']}", 'DELETE')
-    refs = api(prefix + '/git/matching-refs/tags/' + TAG)
-    if any(ref['ref'] == 'refs/tags/' + TAG for ref in refs):
-        api(prefix + '/git/refs/tags/' + TAG, 'PATCH', {'sha': sha, 'force': True})
-    else:
-        api(prefix + '/git/refs', 'POST', {'ref': 'refs/tags/' + TAG, 'sha': sha})
-    api(prefix + f"/releases/{release['id']}", 'PATCH', dict(metadata, draft=False, make_latest='true'))
+            api(f"{prefix}/releases/assets/{asset['id']}", 'DELETE')
+    # The release is created on target_commitish; GitHub makes v<version> point
+    # at that commit. require_tag_at_build() (run before and after the upload)
+    # already blocks a tag that pointed elsewhere, so no force-update of an
+    # existing tag and no post-publication failure after users could see it.
+    api(f"{prefix}/releases/{release['id']}", 'PATCH',
+        {'draft': False, 'make_latest': 'false' if prerelease else 'true'})
     print(f'https://github.com/{repo}/releases/tag/{TAG}')
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('directory', type=Path)
-    parser.add_argument('--prepare-only', action='store_true')
-    parser.add_argument('--notes', type=Path)
+    parser.add_argument('--dry-run', action='store_true', help='validate the directory only')
     args = parser.parse_args()
-    config = json.loads((ROOT / '.github/release.json').read_text())
-    output = prepare(args.directory, args.directory.parent / 'release-ready', config)
-    if not args.prepare_only:
-        sha = os.environ['GITHUB_SHA']
-        actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-        if actual != sha or os.environ.get('GITHUB_REF') != 'refs/heads/main':
-            raise ValueError('Only the current main checkout may publish')
-        publish(output, config, sha, os.environ['GITHUB_REPOSITORY'],
-                args.notes.read_text() if args.notes else '')
+    ref = os.environ.get('GITHUB_REF', '')
+    prerelease = version_info(VERSION, ref)
+    validate(args.directory)
+    if args.dry_run:
+        print(f'{args.directory} holds a complete {TAG} release.')
+        return
+    sha = os.environ['GITHUB_SHA']
+    head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    if head != sha:
+        raise ValueError(f'Checkout {head} is not the built commit {sha}')
+    if ref not in ('refs/heads/main', f'refs/tags/{TAG}'):
+        raise ValueError(f'Only main or tag {TAG} may publish, not {ref}')
+    publish(args.directory, sha, os.environ['GITHUB_REPOSITORY'], prerelease)
 
 
 if __name__ == '__main__':

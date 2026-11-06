@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Run Just Piano from source. Creates a local virtualenv on first use.
+# Run the macOS Just Piano menu-bar app from source. Creates a local virtualenv
+# on first use; Windows users should run run.bat instead.
 #
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -9,7 +10,7 @@ PYTHON_BIN="${PYTHON:-python3}"
 VENV=".venv"
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
-  echo "Just Piano is a macOS menu bar app and needs macOS to run." >&2
+  echo "run.sh is the macOS launcher; use run.bat on Windows." >&2
   exit 1
 fi
 

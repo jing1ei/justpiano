@@ -13,11 +13,11 @@ Launch/build scripts validate Python 3.11 and preserve incompatible local enviro
 
 ## GitHub builds and releases
 
-Every branch push and PR runs `.github/workflows/release.yml` for Intel Mac, Apple Silicon and Windows x64. Manual runs are available in Actions when the workflow is on the default branch. Build artifacts last 14 days.
+Every branch push, pull request and manual run executes `.github/workflows/release.yml` on `macos-15` (Apple silicon), `macos-15-intel` and `windows-2022`. Build artifacts last 14 days; only the publish job gets `contents: write`.
 
-Version validation runs before the build matrix. Windows packaging uses the interpreter selected by Actions; each uploaded package carries its commit, version and SHA-256, verified again before publication.
+`python -m tools.release_metadata plan` decides whether a run publishes. A version is published once, either when `justpiano/__init__.py` is bumped on `main` (and the tag is new) or when the matching `v<version>` tag is pushed. Published releases are immutable: bump the version to ship again; a failed upload can be retried through the draft left for that tag.
 
-A `v*` tag matching `justpiano/__init__.py` publishes a release only after all three builds pass. Assets use the stable filenames listed in README, alongside a source ZIP and SHA-256 checksums. Versions such as `1.0.0rc1` publish prereleases and do not replace the latest stable release. The source ZIP contains tracked deliverables only, with no `.git`, environments, build output or demos. Remove the README's first-release notice when the first release is actually available.
+Each platform package carries a `build-<target>.json` file with its commit, version and SHA-256; the publish job verifies all three before assembling the source ZIP, downloads every upload back to re-verify it, and only then publishes. See `.github/RELEASES.md` for the full trigger and safeguard table.
 
 ## Verification
 

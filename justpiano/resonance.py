@@ -34,8 +34,6 @@ when it is not sounding and cheap when it is:
 
 from __future__ import annotations
 
-import math
-
 import numpy as np
 
 from . import tone

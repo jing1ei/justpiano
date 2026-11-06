@@ -1,26 +1,24 @@
 """Create stable installer names, a tracked-source ZIP and SHA-256 checksums."""
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 import shutil
 import subprocess
 import sys
 
 from justpiano import __version__
+from tools.release_metadata import TARGETS, digest, package_name
 
-ASSETS = {
-    f"JustPiano-{__version__}-macOS-arm64.dmg": "JustPiano-1.0.0-macOS-arm64.dmg",
-    f"JustPiano-{__version__}-macOS-x64.dmg": "JustPiano-1.0.0-macOS-x64.dmg",
-    f"JustPiano-{__version__}-Windows-x64.zip": "JustPiano-1.0.0-Windows-x64.zip",
-}
+ASSETS = [package_name(target) for target in TARGETS]
+SOURCE = f"JustPiano-{__version__}-source.zip"
+RELEASE_FILES = [*ASSETS, SOURCE]
 
 
 def source_archive(destination: Path, revision: str = "HEAD") -> Path:
     root = Path(__file__).resolve().parents[1]
     destination = destination.resolve()
     destination.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["git", "archive", "--format=zip", "--prefix=JustPiano/",
+    subprocess.run(["git", "archive", "--format=zip", f"--prefix=JustPiano-{__version__}/",
                     "-o", str(destination), revision], cwd=root, check=True)
     return destination
 
@@ -33,16 +31,10 @@ def package(directory: Path) -> Path:
     if output.exists():
         raise FileExistsError(f"Use a fresh output directory: {output}")
     output.mkdir()
-    for source, name in ASSETS.items():
-        shutil.copy2(directory / source, output / name)
-    source_archive(output / "JustPiano-1.0.0-source.zip")
-    sums = []
-    for path in sorted(output.iterdir()):
-        digest = hashlib.sha256()
-        with path.open("rb") as stream:
-            for block in iter(lambda: stream.read(1024 * 1024), b""):
-                digest.update(block)
-        sums.append(f"{digest.hexdigest()}  {path.name}")
+    for name in ASSETS:
+        shutil.copy2(directory / name, output / name)
+    source_archive(output / SOURCE)
+    sums = [f"{digest(output / name)}  {name}" for name in sorted(RELEASE_FILES)]
     (output / "SHA256SUMS.txt").write_text("\n".join(sums) + "\n", encoding="utf-8")
     return output
 

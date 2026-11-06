@@ -10,4 +10,6 @@ assets/icon.icns
 # Rendered demos: made by tools/demo_render.py and tools/ab_phrase.py,
 # reproducible from the repo, and far too big to keep in it.
 demos/
+.ruff_cache/
+.test-home*/
 .DS_Store

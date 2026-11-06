@@ -175,11 +175,10 @@ def available() -> bool:
 def _ax_is_trusted():
     """Bind `AXIsProcessTrusted`, or None if it cannot be reached. Cached.
 
-    ApplicationServices is not in `requirements.txt` (only
-    pyobjc-framework-Cocoa is), so the import is tried first and the C function
-    is otherwise bound straight out of the system framework with pyobjc-core -
-    which Cocoa already depends on. `Z` is pyobjc's encoding for a Boolean
-    return, and `AXIsProcessTrusted` takes no arguments.
+    The ApplicationServices PyObjC bridge is a declared macOS dependency. Keep
+    a system-framework fallback for partially provisioned source environments;
+    pyobjc-core is available wherever Cocoa is installed. `Z` is pyobjc's
+    encoding for a Boolean return, and `AXIsProcessTrusted` takes no arguments.
     """
     global _AX_TRUSTED, _AX_TRIED
     if _AX_TRIED:

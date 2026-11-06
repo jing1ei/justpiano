@@ -9,7 +9,6 @@ Original sample attribution remains in each manifest and README.
 from __future__ import annotations
 
 import json
-import math
 import mmap
 import os
 import threading

@@ -10,19 +10,17 @@
 
 [**Download Just Piano →**](https://github.com/jing1ei/justpiano/releases)
 
-*The first packaged release is not published yet. Downloads will appear on this page when ready.*
-
 ![Piano keyboard with a C-major chord highlighted](docs/screenshots/keyboard.png)
 
 ## Download and open
 
 | Your computer | Choose this download | Open it |
 |---|---|---|
-| Mac with Apple Silicon (M1 or later) | `JustPiano-1.0.0-macOS-arm64.dmg` | Open the DMG and drag JustPiano into Applications. |
-| Mac with an Intel processor | `JustPiano-1.0.0-macOS-x64.dmg` | Open the DMG and drag JustPiano into Applications. |
-| Windows PC, 64-bit | `JustPiano-1.0.0-Windows-x64.zip` | Extract the whole ZIP, then open `JustPiano/JustPiano.exe`. |
+| Mac with Apple Silicon (M1 or later) | `JustPiano-1.0.1-macOS-arm64.dmg` | Open the DMG and drag JustPiano into Applications. |
+| Mac with an Intel processor | `JustPiano-1.0.1-macOS-x64.dmg` | Open the DMG and drag JustPiano into Applications. |
+| Windows PC, 64-bit | `JustPiano-1.0.1-Windows-x64.zip` | Extract the whole ZIP, then open `JustPiano/JustPiano.exe`. |
 
-Packaged apps include everything needed to run. Compatibility targets are macOS 11+ and Windows 10+; verification on those oldest systems is still pending. Mac builds are ad-hoc signed, not notarized.
+Packaged apps include everything needed to run and target macOS 11+ and Windows 10+. macOS apps are ad-hoc signed and not notarized; install them only from a release you trust.
 
 ## Play → choose a sound → save
 
@@ -69,7 +67,7 @@ On Mac, right-click 🎹 also opens the settings menu. If menu-bar overflow hide
 | Export unavailable | Stop the take first. For WAV, wait for the sound to finish loading. |
 | Mac blocks opening | Use macOS's Open / Privacy & Security flow only for a download you trust. |
 
-Windows currently has no tray mode, global mute shortcut, virtual MIDI port or launch-at-login setting. MIDI channels share one instrument; pitch bend/modulation are saved to MIDI but do not affect playback. Aftertouch and program changes are ignored.
+Windows uses a window rather than the macOS menu bar and does not provide a global mute shortcut, virtual MIDI port, or launch-at-login setting. MIDI channels share one instrument; pitch bend and modulation are saved to MIDI but do not affect playback. Aftertouch and program changes are ignored.
 
 *Images are captures of the actual macOS keyboard component with staged demonstration states, not live-session screenshots. Windows uses a separate window layout.*
 
@@ -81,10 +79,6 @@ Windows currently has no tray mode, global mute shortcut, virtual MIDI port or l
 
 Original project code: © 2026, **all rights reserved**. No license to use, copy, modify or redistribute the code is granted. Bundled audio retains its separate terms above.
 
-## Automatic downloads
+## Automatic releases
 
-Every successful build from a push to `main` refreshes the public **1.0.0** release.
-All required platform builds and checks must pass first. Downloads use
-`App-1.0.0-OS-architecture.ext`, such as `App-1.0.0-macOS-universal.zip`
-or `App-1.0.0-Windows-x64.exe`. See [release automation](.github/RELEASES.md)
-for the exact packages, checksums, and retry behavior.
+GitHub Actions builds and tests macOS arm64, macOS x64 and Windows x64 on every push and pull request. A new version is published automatically, once, when `justpiano/__init__.py` is bumped on `main` or when a matching `v<version>` tag is pushed. Downloads use the exact filenames in the table above, plus `JustPiano-<version>-source.zip` and `SHA256SUMS.txt`. See [release automation](.github/RELEASES.md) for the publication safeguards.

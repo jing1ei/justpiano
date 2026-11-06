@@ -1,56 +1,83 @@
-name: Build and verify
+name: Build and release
+
+# Every push and pull request builds, tests and packages all three platforms.
+# A release is published automatically, once per version, when either
+#   * a version bump in justpiano/__init__.py reaches main, or
+#   * a matching tag (v<version>) is pushed.
+# Published releases are never replaced; ship again by bumping the version.
 on:
   push:
     branches: ['**']
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
+
 permissions:
   contents: read
+
 env:
   PYTHONUTF8: '1'
   PYTHONIOENCODING: utf-8
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+
 concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: false
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  validate:
-    runs-on: ubuntu-latest
+  plan:
+    name: Plan release
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
-      prerelease: ${{ steps.version.outputs.prerelease }}
+      version: ${{ steps.plan.outputs.version }}
+      tag: ${{ steps.plan.outputs.tag }}
+      prerelease: ${{ steps.plan.outputs.prerelease }}
+      publish: ${{ steps.plan.outputs.publish }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - name: Validate version before building
-        id: version
+      - name: Validate version and decide whether to publish
+        id: plan
+        run: python -m tools.release_metadata plan
+      - name: Release publisher regressions
+        run: python .github/scripts/test_release.py
+      - name: Summary
         run: |
-          python -m tools.release_metadata version
-          python .github/scripts/test_release.py
+          {
+            echo "### Just Piano ${{ steps.plan.outputs.version }}"
+            if [ "${{ steps.plan.outputs.publish }}" = "true" ]; then
+              echo "This run publishes **${{ steps.plan.outputs.tag }}** after every platform passes."
+            else
+              echo "This run builds and tests only; packages are kept as workflow artifacts for 14 days."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
   build:
-    needs: validate
+    name: Build ${{ matrix.target }}
+    needs: plan
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: macos-15-intel
-            target: macOS-x64
-            platform: macOS-x64
-            architecture: x64
           - os: macos-15
             target: macOS-arm64
-            platform: macOS-arm64
             architecture: arm64
+          - os: macos-15-intel
+            target: macOS-x64
+            architecture: x64
           - os: windows-2022
             target: Windows-x64
-            platform: Windows-x64
             architecture: x64
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
         id: python
         with:
           python-version: '3.11'
@@ -59,11 +86,9 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             constraints-build.txt
-      - name: Install reproducible dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt -c constraints-build.txt pyinstaller setuptools
-      - name: Core and platform regressions
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements.txt -c constraints-build.txt pyinstaller setuptools
+      - name: Unit and platform regressions
         run: python -m unittest discover -s tests -v
       - name: Audio integration (macOS)
         if: runner.os == 'macOS'
@@ -80,7 +105,7 @@ jobs:
         env:
           PYTHON: ${{ steps.python.outputs.python-path }}
         run: ./build_windows.ps1
-      - name: Package macOS and check all deployment targets
+      - name: Package macOS and check deployment targets
         if: runner.os == 'macOS'
         shell: bash
         env:
@@ -88,46 +113,58 @@ jobs:
         run: |
           export JUSTPIANO_VENV="$pythonLocation"
           ./build_app.sh --dmg
-      - name: Verify package and record build identity
-        run: python -m tools.release_metadata stamp dist ${{ matrix.target }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: JustPiano-1.0.0-${{ matrix.platform }}
-          path: |
-            dist/*.dmg
-            dist/*.zip
-            dist/build-*.json
-          if-no-files-found: error
-          retention-days: 14
-      - name: Download instructions
+      - name: Check the app inside the disk image
+        if: runner.os == 'macOS'
         shell: bash
         run: |
-          echo "### ${{ matrix.target }} package ready" >> "$GITHUB_STEP_SUMMARY"
-          echo "Download **JustPiano-1.0.0-${{ matrix.platform }}** from the Artifacts section of this run." >> "$GITHUB_STEP_SUMMARY"
-          echo "Build artifacts are retained for 14 days. Pushes to main refresh release 1.0.0 after all platforms pass." >> "$GITHUB_STEP_SUMMARY"
+          dmg="dist/JustPiano-${{ needs.plan.outputs.version }}-${{ matrix.target }}.dmg"
+          mount="$(mktemp -d)"
+          hdiutil attach -readonly -nobrowse -mountpoint "$mount" "$dmg"
+          trap 'hdiutil detach "$mount" -quiet || true' EXIT
+          codesign --verify --deep --strict "$mount/JustPiano.app"
+          test "$(lipo -archs "$mount/JustPiano.app/Contents/MacOS/JustPiano")" = "$(uname -m)"
+          test -L "$mount/Applications"
+      - name: Record build identity
+        run: python -m tools.release_metadata stamp dist ${{ matrix.target }}
+      - uses: actions/upload-artifact@v6
+        with:
+          name: JustPiano-${{ needs.plan.outputs.version }}-${{ matrix.target }}
+          path: |
+            dist/JustPiano-${{ needs.plan.outputs.version }}-${{ matrix.target }}.*
+            dist/build-${{ matrix.target }}.json
+          if-no-files-found: error
+          retention-days: 14
+
   publish:
-    name: Publish 1.0.0
-    needs: [validate, build]
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    name: Publish ${{ needs.plan.outputs.tag }}
+    needs: [plan, build]
+    if: needs.plan.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: write
+    concurrency:
+      group: publish-${{ needs.plan.outputs.tag }}
+      cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
         with:
-          python-version: '3.12'
-      - uses: actions/download-artifact@v4
+          persist-credentials: false
+      - uses: actions/setup-python@v6
         with:
-          pattern: JustPiano-1.0.0-*
+          python-version: '3.11'
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: JustPiano-${{ needs.plan.outputs.version }}-*
           merge-multiple: true
           path: release
-      - name: Verify build identity and prepare downloads
+      - name: Verify build identity and assemble downloads
         run: |
           python -m tools.release_metadata verify release
           python -m tools.package_release release
-      - name: Publish verified packages
+      - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: python .github/scripts/release.py release/downloads
+      - name: Summary
+        run: echo "Published [${{ needs.plan.outputs.tag }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ needs.plan.outputs.tag }})." >> "$GITHUB_STEP_SUMMARY"
