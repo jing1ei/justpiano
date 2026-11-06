@@ -36,6 +36,7 @@ import time
 import tracemalloc
 import wave
 from concurrent.futures import ThreadPoolExecutor
+from statistics import median
 from unittest.mock import patch
 
 import numpy as np
@@ -1428,27 +1429,30 @@ def test_recorder(bank: SampleBank) -> None:
     # Eviction used to delete the front quarter of a 400,000-element list and
     # rescan it for note-ons, 8.7 ms on the rtmidi callback thread while holding
     # the recorder lock. Nothing may scale with the buffer's length any more, so
-    # the same measurement is taken on a buffer 100x smaller: both are at their
-    # cap and neither is still growing, so any rescan shows up as a ratio.
+    # compare a full session to a buffer 100x smaller. Measure batches in
+    # thread CPU time so a runner pausing the thread cannot look like a rescan.
     Ring = type(rec.Recorder().session)
 
-    def worst_at_cap(limit, n=30_000):
+    def append_time_at_cap(limit):
         buf = Ring(limit)
         for i in range(limit):
             buf.append(float(i), NOTE_ON, 60, 100)
-        worst = 0.0
-        for i in range(n):
-            t0 = time.perf_counter()
-            buf.append(1e6 + i, NOTE_ON, 60, 100)
-            worst = max(worst, time.perf_counter() - t0)
-        return worst
+        batch_size = 1000
+        samples = []
+        for batch in range(9):
+            start = batch * batch_size
+            t0 = time.thread_time()
+            for i in range(start, start + batch_size):
+                buf.append(1e6 + i, NOTE_ON, 60, 100)
+            samples.append((time.thread_time() - t0) / batch_size)
+        return median(samples)
 
-    small_worst = worst_at_cap(4096)
-    full_worst = worst_at_cap(rec.SESSION_LIMIT)
+    small_time = append_time_at_cap(4096)
+    full_time = append_time_at_cap(rec.SESSION_LIMIT)
     check("recording an event at the session limit is O(1), not a rescan",
-          full_worst < max(small_worst * 8.0, 200e-6),
-          f"{full_worst * 1e6:.1f} us at the 400k cap vs "
-          f"{small_worst * 1e6:.1f} us at a 4k one")
+          full_time < small_time * 8.0,
+          f"{full_time * 1e6:.2f} us/event at the 400k cap vs "
+          f"{small_time * 1e6:.2f} us/event at a 4k one")
     check("the ring stops reallocating once it is at the cap",
           ring.session.capacity == rec.SESSION_LIMIT
           and len(ring.session) == rec.SESSION_LIMIT,
