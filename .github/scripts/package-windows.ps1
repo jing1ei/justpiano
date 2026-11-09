@@ -7,6 +7,7 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$Architecture = $Architecture.ToLowerInvariant()
 $source = (Resolve-Path -LiteralPath $SourceDirectory).Path
 if (-not (Test-Path -LiteralPath "$source/$Application.exe" -PathType Leaf)) {
     throw "Missing application executable in $source"
