@@ -18,7 +18,7 @@ import sys
 
 from justpiano import __version__
 
-TARGETS = {'macOS-arm64': 'dmg', 'macOS-x64': 'dmg', 'Windows-x64': 'zip'}
+TARGETS = {'macOS-arm64': 'dmg', 'macOS-x64': 'dmg', 'Windows-x64': 'exe'}
 RELEASE_BRANCH = 'refs/heads/main'
 _VERSION = re.compile(r'\d+\.\d+\.\d+(?:(?:a|b|rc)\d+)?')
 _PRERELEASE = re.compile(r'(?:a|b|rc)\d+$')

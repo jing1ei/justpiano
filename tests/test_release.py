@@ -31,7 +31,7 @@ class ReleaseTests(unittest.TestCase):
                 output = package_release.package(root)
             self.assertEqual({p.name for p in output.iterdir()}, {
                 f'JustPiano-{__version__}-macOS-arm64.dmg', f'JustPiano-{__version__}-macOS-x64.dmg',
-                f'JustPiano-{__version__}-Windows-x64.zip', f'JustPiano-{__version__}-source.zip', 'SHA256SUMS.txt'})
+                f'JustPiano-{__version__}-Windows-x64.exe', f'JustPiano-{__version__}-source.zip', 'SHA256SUMS.txt'})
             for line in (output/'SHA256SUMS.txt').read_text().splitlines():
                 digest, name = line.split('  ')
                 self.assertEqual(digest, hashlib.sha256((output/name).read_bytes()).hexdigest())

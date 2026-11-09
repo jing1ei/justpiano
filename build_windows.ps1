@@ -20,5 +20,4 @@ if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'Packaged app startup check failed.' }
 $version = & $python -c 'from justpiano import __version__; print(__version__)'
 if ($LASTEXITCODE -ne 0) { throw 'Could not determine package version.' }
-Compress-Archive -Path 'dist\JustPiano' -DestinationPath "dist\JustPiano-$version-Windows-x64.zip" -Force
-Write-Host 'Extract the entire ZIP, then open JustPiano\JustPiano.exe.'
+./.github/scripts/package-windows.ps1 -Application JustPiano -Version $version -Architecture x64 -SourceDirectory dist/JustPiano -OutputDirectory dist

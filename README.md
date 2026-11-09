@@ -16,9 +16,9 @@
 
 | Your computer | Choose this download | Open it |
 |---|---|---|
-| Mac with Apple Silicon (M1 or later) | `JustPiano-1.0.1-macOS-arm64.dmg` | Open the DMG and drag JustPiano into Applications. |
-| Mac with an Intel processor | `JustPiano-1.0.1-macOS-x64.dmg` | Open the DMG and drag JustPiano into Applications. |
-| Windows PC, 64-bit | `JustPiano-1.0.1-Windows-x64.zip` | Extract the whole ZIP, then open `JustPiano/JustPiano.exe`. |
+| Mac with Apple Silicon (M1 or later) | `JustPiano-1.0.2-macOS-arm64.dmg` | Open the DMG and drag JustPiano into Applications. |
+| Mac with an Intel processor | `JustPiano-1.0.2-macOS-x64.dmg` | Open the DMG and drag JustPiano into Applications. |
+| Windows PC, 64-bit | `JustPiano-1.0.2-Windows-x64.exe` | Run the installer, then open JustPiano from the Start menu. |
 
 Packaged apps include everything needed to run and target macOS 11+ and Windows 10+. macOS apps are ad-hoc signed and not notarized; install them only from a release you trust.
 

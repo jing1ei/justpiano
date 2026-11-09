@@ -30,7 +30,7 @@ NOTES = (
     '|---|---|\n'
     '| Mac with Apple silicon (M1 or later) | `JustPiano-{version}-macOS-arm64.dmg` |\n'
     '| Mac with an Intel processor | `JustPiano-{version}-macOS-x64.dmg` |\n'
-    '| Windows 10 or later, 64-bit | `JustPiano-{version}-Windows-x64.zip` |\n\n'
+    '| Windows 10 or later, 64-bit | `JustPiano-{version}-Windows-x64.exe` |\n\n'
     'macOS builds are ad-hoc signed and not notarized. `{checksums}` covers every asset; '
     'the source archive contains the tracked repository. See the README for installation, '
     'requirements and audio sample credits.'

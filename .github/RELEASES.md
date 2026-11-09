@@ -1,3 +1,5 @@
+> The current public package formats and names are defined in [Package contract](PACKAGING.md).
+
 # Automatic releases
 
 [`.github/workflows/release.yml`](workflows/release.yml) builds, tests and
@@ -36,7 +38,7 @@ For version `X.Y.Z`:
 
 - `JustPiano-X.Y.Z-macOS-arm64.dmg`
 - `JustPiano-X.Y.Z-macOS-x64.dmg`
-- `JustPiano-X.Y.Z-Windows-x64.zip`
+- `JustPiano-X.Y.Z-Windows-x64.exe`
 - `JustPiano-X.Y.Z-source.zip` (tracked files from the built commit)
 - `SHA256SUMS.txt`
 
