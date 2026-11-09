@@ -158,6 +158,8 @@ class PublisherFlowTests(unittest.TestCase):
         self.assertFalse(any(m == 'POST' and e.endswith('/releases')
                              for m, e, _ in self.calls))
         self.assertFalse(any('/git/refs' in e for m, e, _ in self.calls))
+        draft = next(p for m, e, p in self.calls if m == 'PATCH' and '/releases/' in e)
+        self.assertEqual(draft['tag_name'], release.TAG)
 
     def test_wrong_tag_commit_blocks_publication(self):
         with self.assertRaisesRegex(ValueError, 'points at'):

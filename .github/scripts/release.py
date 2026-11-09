@@ -111,11 +111,11 @@ def publish(directory, sha, repo, prerelease, notes=''):
     body = notes or NOTES.format(version=VERSION, checksums=CHECKSUMS)
     body += f'\n\nBuilt from `{sha}`.\n'
     metadata = {'name': f'Just Piano {VERSION}', 'body': body, 'draft': True,
-                'prerelease': prerelease, 'target_commitish': sha}
+                'prerelease': prerelease, 'target_commitish': sha, 'tag_name': TAG}
     if releases:   # a draft left by a failed earlier attempt
         release = api(f"{prefix}/releases/{releases[0]['id']}", 'PATCH', metadata)
     else:
-        release = api(f'{prefix}/releases', 'POST', dict(metadata, tag_name=TAG))
+        release = api(f'{prefix}/releases', 'POST', metadata)
     gh('release', 'upload', TAG, '--repo', repo, '--clobber',
        *(str(directory / name) for name in sorted(expected)))
     # Check what GitHub stored, including resumed uploads, before going public.
