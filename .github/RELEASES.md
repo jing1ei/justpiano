@@ -7,7 +7,7 @@ packages JustPiano on three GitHub-hosted runners:
 
 - `macos-15` — Apple silicon (`macOS-arm64` DMG)
 - `macos-15-intel` — Intel (`macOS-x64` DMG)
-- `windows-2022` — 64-bit Windows (`Windows-x64` ZIP)
+- `windows-2022` — 64-bit Windows (`Windows-x64` EXE installer)
 
 Every branch push, pull request and manual workflow run goes through the full
 matrix but only uploads workflow artifacts (retained 14 days). It does not
